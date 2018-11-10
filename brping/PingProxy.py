@@ -17,13 +17,13 @@ class PingClient(object):
         self.rxMsgs = deque([])
 
         ## Parser to verify client comms
-        self.parser = PingMessage.PingParser()
+        self.parser = PingParser()
 
     ## Digest incoming client data
     # @return None
     def parse(self, data):
         for b in bytearray(data):
-            if self.parser.parseByte(b) == PingMessage.PingParser.NEW_MESSAGE:
+            if self.parser.parse_byte(b) == PingParser.NEW_MESSAGE:
                 self.rxMsgs.append(self.parser.rxMsg)
 
     ## Dequeue a message received from client
