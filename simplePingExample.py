@@ -2,6 +2,7 @@
 
 #simplePingExample.py
 from brping import Ping1D
+from brping import PingMessage
 import time
 import argparse
 
@@ -17,22 +18,25 @@ args = parser.parse_args()
 
 #Make a new Ping
 myPing = Ping1D(args.device, args.baudrate)
-if myPing.initialize() is False:
+
+def init():
+    if myPing.set_mode_auto(True) is None:
+        return False
+    if myPing.set_ping_enable(True) is None:
+        return False
+    if myPing.set_ping_interval(20) is None:
+        return False
+    return True
+
+if init() is False:
     print("Failed to initialize Ping!")
     exit(1)
 
-print("------------------------------------")
-print("Starting Ping..")
-print("Press CTRL+C to exit")
-print("------------------------------------")
-
-input("Press Enter to continue...")
-
 # Read and print distance measurements with confidence
 while True:
-    data = myPing.get_distance()
+    data = myPing.request(1300)
     if data:
-        print("Distance: %s\tConfidence: %s%%" % (data["distance"], data["confidence"]))
+        print("[[[%f]]]%s" % (time.time(), data.msg_data))
     else:
         print("Failed to get distance data")
-    time.sleep(0.1)
+    time.sleep(0.01)
