@@ -32,6 +32,8 @@ if init() is False:
     print("Failed to initialize Ping!")
     exit(1)
 
+print("start log")
+print(myPing)
 # Read and print distance measurements with confidence
 while True:
     data = myPing.request(1300)
