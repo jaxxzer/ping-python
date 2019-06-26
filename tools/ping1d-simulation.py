@@ -26,15 +26,15 @@ class Ping1DSimulation(object):
         self._ping_number = 0 # count the total measurements taken since boot
         self._ping_interval = 100 # milliseconds between measurements
         self._mode_auto = True # automatic gain and range selection
-        self._mode_continuous = True # automatic continuous output of profile messages
+        self._mode_continuous = False # automatic continuous output of profile messages
 
     # read incoming client data
     def read(self):
         try:
             data, self.client = self.sockit.recvfrom(4096)
-
             # digest data coming in from client
             for byte in data:
+                print("got byte: %d" % byte)
                 if self.parser.parse_byte(byte) == PingParser.NEW_MESSAGE:
                     # we decoded a message from the client
                     self.handleMessage(self.parser.rx_msg)
@@ -48,7 +48,6 @@ class Ping1DSimulation(object):
     # write data to client
     def write(self, data):
         if self.client is not None:
-            print("sending data to client")
             self.sockit.sendto(data, self.client)
 
     # Send a message to the client, the message fields are populated by the
@@ -56,7 +55,7 @@ class Ping1DSimulation(object):
     # the message field names
     def sendMessage(self, message_id):
         msg = PingMessage(message_id)
-
+        print("sending message to client: %d" % message_id)
         # pull attributes of this class into the message fields (they are named the same)
         for attr in payload_dict[message_id]["field_names"]:
             try:

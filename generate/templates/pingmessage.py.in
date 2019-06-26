@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# PingMessage.py
+# {{class_info.name}}.py
 # Python implementation of the Blue Robotics 'Ping' binary message protocol
 
 # ~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!
@@ -9,13 +9,60 @@
 # ~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!~!
 
 import struct
-import definitions
-payload_dict = definitions.payload_dict_all
-asciiMsgs = [definitions.COMMON_NACK, definitions.COMMON_ASCII_TEXT]
-variable_msgs = [definitions.PING1D_PROFILE, ]
+
+'''
+A reminder for struct formatting:
+b = i8
+B = u8
+h = i16
+H = u16
+i = i32
+I = u32
+char[] = s
+'''
+
+{% for message in all_msgs|sort %}
+PING1D_{{message|upper}} = {{all_msgs[message].id}}
+{% endfor %}
+
+# variable length fields are formatted with 's', and always occur at the end of the payload
+# the format string for these messages is adjusted at runtime, and 's' inserted appropriately at runtime
+# see {{class_info.name}}.get_payload_format()
+payload_dict = {
+{% for message in all_msgs|sort %}
+    PING1D_{{message|upper}}: {
+        "name": "{{message}}",
+        "format": "
+{%- for field in all_msgs[message].payload %}
+{% if generator.is_vector(field) %}
+{% if field.vector.sizetype %}
+{{structToken[field.vector.sizetype]}}
+{%- endif %}
+{% else %}
+{{structToken[field.type]}}
+{%- endif %}
+{% endfor %}",
+        "field_names": (
+{% for field in all_msgs[message].payload %}
+{% if generator.is_vector(field) %}
+{% if field.vector.sizetype %}
+             "{{field.name}}_length",
+{% endif %}
+{% endif %}
+             "{{field.name}}",
+{% endfor %}
+            ),
+        "payload_length": {{generator.calc_payload(all_msgs[message].payload)}}
+    },
+
+{% endfor %}
+}
+
+asciiMsgs = [PING1D_NACK, PING1D_ASCII_TEXT]
+variable_msgs = [PING1D_PROFILE, ]
 
 
-class PingMessage(object):
+class {{class_info.name}}(object):
     ## header start byte 1
     start_1 = ord("B")
 
@@ -117,10 +164,10 @@ class PingMessage(object):
         self.update_payload_length()
 
         # Prepare struct packing format string
-        msg_format = PingMessage.endianess + PingMessage.header_format + self.get_payload_format()
+        msg_format = {{class_info.name}}.endianess + {{class_info.name}}.header_format + self.get_payload_format()
 
         # Prepare complete list of field names (header + payload)
-        attrs = PingMessage.header_field_names + payload_dict[self.message_id]["field_names"]
+        attrs = {{class_info.name}}.header_field_names + payload_dict[self.message_id]["field_names"]
 
         # Prepare iterable ordered list of values to pack
         values = []
@@ -135,7 +182,7 @@ class PingMessage(object):
         self.msg_data = bytearray(struct.pack(msg_format, *values))
 
         # Update and append checksum
-        self.msg_data += bytearray(struct.pack(PingMessage.endianess + PingMessage.checksum_format, self.update_checksum()))
+        self.msg_data += bytearray(struct.pack({{class_info.name}}.endianess + {{class_info.name}}.checksum_format, self.update_checksum()))
 
         return self.msg_data
 
@@ -144,9 +191,9 @@ class PingMessage(object):
         self.msg_data = msg_data
 
         # Extract header
-        header = struct.unpack(PingMessage.endianess + PingMessage.header_format, self.msg_data[0:PingMessage.headerLength])
+        header = struct.unpack({{class_info.name}}.endianess + {{class_info.name}}.header_format, self.msg_data[0:{{class_info.name}}.headerLength])
 
-        for i, attr in enumerate(PingMessage.header_field_names):
+        for i, attr in enumerate({{class_info.name}}.header_field_names):
             setattr(self, attr, header[i])
 
         if self.payload_length > 0:
@@ -162,12 +209,12 @@ class PingMessage(object):
                     setattr(self, attr, payload[i])
 
         # Extract checksum
-        self.checksum = struct.unpack(PingMessage.endianess + PingMessage.checksum_format, self.msg_data[PingMessage.headerLength + self.payload_length: PingMessage.headerLength + self.payload_length + PingMessage.checksumLength])[0]
+        self.checksum = struct.unpack({{class_info.name}}.endianess + {{class_info.name}}.checksum_format, self.msg_data[{{class_info.name}}.headerLength + self.payload_length: {{class_info.name}}.headerLength + self.payload_length + {{class_info.name}}.checksumLength])[0]
 
     ## Calculate the checksum from the internal bytearray self.msg_data
     def calculate_checksum(self):
         checksum = 0
-        for byte in self.msg_data[0:PingMessage.headerLength + self.payload_length]:
+        for byte in self.msg_data[0:{{class_info.name}}.headerLength + self.payload_length]:
             checksum += byte
         return checksum
 
@@ -206,7 +253,7 @@ class PingMessage(object):
     # @return string representation of the object
     def __repr__(self):
         header_string = "Header:"
-        for attr in PingMessage.header_field_names:
+        for attr in {{class_info.name}}.header_field_names:
             header_string += " " + attr + ": " + str(getattr(self, attr))
 
         if self.payload_length == 0:  # this is a hack/guard for empty body requests
@@ -319,7 +366,7 @@ class PingParser(object):
             self.state += 1
         elif self.state == PingParser.WAIT_CHECKSUM_H:
             self.buf.append(msg_byte)
-            self.rx_msg = PingMessage(msg_data=self.buf)
+            self.rx_msg = {{class_info.name}}(msg_data=self.buf)
 
             # print(self.rx_msg)
 
@@ -383,7 +430,7 @@ if __name__ == "__main__":
     # Connect to a device
     s = serial.Serial(args.device, args.baudrate)
     while True:
-        m = PingMessage(definitions.PING1D_SET_PING_INTERVAL)
+        m = {{class_info.name}}(PING1D_SET_PING_INTERVAL)
         m.ping_interval = 40
         m.pack_msg_data()
         s.write(m.msg_data)
@@ -393,22 +440,22 @@ if __name__ == "__main__":
             if p.parse_byte(s.read()) == PingParser.NEW_MESSAGE:
                 print(p.rx_msg)
 
-        m = PingMessage()
-        m.request_id = definitions.PING1D_PROFILE
+        m = {{class_info.name}}()
+        m.request_id = PING1D_PROFILE
         m.pack_msg_data()
         s.write(m.msg_data)
         time.sleep(0.05)
         while s.in_waiting:
             if p.parse_byte(s.read()) == PingParser.NEW_MESSAGE:
                 print(p.rx_msg)
-        m.request_id = definitions.PING1D_VOLTAGE_5
+        m.request_id = PING1D_VOLTAGE_5
         m.pack_msg_data()
         s.write(m.msg_data)
         time.sleep(0.01)
         while s.in_waiting:
             if p.parse_byte(s.read()) == PingParser.NEW_MESSAGE:
                 print(p.rx_msg)
-        m.request_id = definitions.PING1D_DISTANCE_SIMPLE
+        m.request_id = PING1D_DISTANCE_SIMPLE
         m.pack_msg_data()
         s.write(m.msg_data)
         time.sleep(0.01)
