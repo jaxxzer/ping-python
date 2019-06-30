@@ -400,6 +400,7 @@ if __name__ == "__main__":
         print(p.rx_msg)
     else:
         print("fail:", result)
+        exit(1)
 
     # A dynamic vector message
     print("\n---Testing profile---\n")
@@ -410,3 +411,4 @@ if __name__ == "__main__":
         print(p.rx_msg)
     else:
         print("fail:", result)
+        exit(1)
