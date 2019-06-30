@@ -6,6 +6,6 @@ citest git branch -a
 citest git branch
 citest git checkout deployment
 citest git reset
-citest cat ci/deploy-whitelist | xargs git add
+citest "cat ci/deploy-whitelist | xargs git add"
 citest git status
 citest git commit -m "automated deployment"
