@@ -2,10 +2,10 @@
 
 . ci/ci-functions.sh
 
-echob "generating message api..."
+echob "Generating Message APi."
 pip install jinja2 && generate/generate-python.py --output-dir=brping || exit 1
 
-echob "testing message api..."
+echob "Testing message api."
 python brping/pingmessage.py || exit 1
 
 echob "installing package..."
