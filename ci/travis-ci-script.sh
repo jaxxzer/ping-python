@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
 . ci/ci-functions.sh
-echob "Build doxygen documentation."
 
 echob "Generating Message APi."
-pip install jinja2 && generate/generate-python.py --output-dir=brping || exit 1
+citest pip install jinja2 && generate/generate-python.py --output-dir=brping
 
 echob "Testing message api."
 python brping/pingmessage.py || exit 1

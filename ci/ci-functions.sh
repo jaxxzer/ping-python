@@ -2,3 +2,7 @@
 echob() {
     echo "${bold}${1}${normal}"
 }
+
+citest() {
+    "$@" || exit 1
+}
