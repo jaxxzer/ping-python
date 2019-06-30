@@ -431,7 +431,14 @@ payload_dict_ping360 = {
 }
 
 PINGMESSAGE_UNDEFINED = 0
-payload_dict_all = {    PINGMESSAGE_UNDEFINED: {        "name": "undefined",        "format": "",        "field_names": (),        "payload_length": 0    },}
+payload_dict_all = {
+    PINGMESSAGE_UNDEFINED: {
+        "name": "undefined",
+        "format": "",
+        "field_names": (),
+        "payload_length": 0
+    },
+}
 payload_dict_all.update(payload_dict_common)
 payload_dict_all.update(payload_dict_ping1d)
 payload_dict_all.update(payload_dict_ping360)

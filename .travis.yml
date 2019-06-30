@@ -6,6 +6,7 @@ addons:
   apt:
     packages:
       - doxygen
+      - grapviz
 
 deploy:
   provider: pypi
