@@ -24,11 +24,8 @@ else
 fi
 
 echob "Build doxygen documentation."
-echob $doc_path
-if ! ( cd $doc_path && doxygen "Doxyfile" ); then
-    echo "- Doxygen generation failed."
-    exit 1
-fi
+citest cd $doc_path && doxygen "Doxyfile"
+
 echo "- Check files"
 ls -A "${doc_path}/html/"
 
