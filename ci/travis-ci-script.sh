@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
-echo "generating message api..."
-generate/generate-python.py --output-dir=brping || exit 1
+. ci/functions.sh
 
-echo "testing message api..."
+echob "generating message api..."
+pip install jinja2 && generate/generate-python.py --output-dir=brping || exit 1
+
+echob "testing message api..."
 python brping/pingmessage.py || exit 1
 
-echo "installing package..."
+echob "installing package..."
 python setup.py install || exit 1
 
-echo "update gh pages..."
+echob "update gh pages..."
 pip install pyOpenSSL && ci/update-gh-pages.sh || exit 1
