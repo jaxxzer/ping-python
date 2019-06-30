@@ -1,4 +1,4 @@
-#!/usr/bin/env/ bash
+#!/usr/bin/env bash
 
 python setup.py install --user || exit 1
 python brping/pingmessage.py || exit 1
