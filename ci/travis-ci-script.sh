@@ -11,7 +11,5 @@ citest python brping/pingmessage.py
 echob "installing package..."
 citest python setup.py install
 
-citest false
-
 echob "update gh pages..."
 citest pip install pyOpenSSL && ci/update-gh-pages.sh
