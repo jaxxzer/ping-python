@@ -6,10 +6,12 @@ echob "Generating Message APi."
 citest pip install jinja2 && generate/generate-python.py --output-dir=brping
 
 echob "Testing message api."
-python brping/pingmessage.py || exit 1
+citest python brping/pingmessage.py
 
 echob "installing package..."
-python setup.py install || exit 1
+citest python setup.py install
 
 echob "update gh pages..."
-pip install pyOpenSSL && ci/update-gh-pages.sh || exit 1
+citest pip install pyOpenSSL && ci/update-gh-pages.sh
+
+citest false
