@@ -15,3 +15,6 @@ citest python setup.py install
 echob "update gh pages..."
 citest pip install pyOpenSSL
 citest ci/update-gh-pages.sh
+
+echob "deploying..."
+citest ci/deploy.sh

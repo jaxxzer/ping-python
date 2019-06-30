@@ -2,5 +2,7 @@
 
 . ci/ci-functions.sh
 
-echob "deploying..."
-git status
+citest git checkout deployment
+citest git reset
+citest cat ci/deploy-whitelist | xargs git add
+citest git commit -m 'automated deployment'
