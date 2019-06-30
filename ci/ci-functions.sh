@@ -4,5 +4,6 @@ echob() {
 }
 
 citest() {
-    "$@" || exit 1
+    echob "testing $@"
+    "$@" || echob "failed" && exit 1
 }
