@@ -2,16 +2,16 @@
 
 . ci/ci-functions.sh
 
-echob "Generating Message APi."
+echob "generating message api..."
 citest pip install jinja2 && generate/generate-python.py --output-dir=brping
 
-echob "Testing message api."
+echob "testing message api..."
 citest python brping/pingmessage.py
 
 echob "installing package..."
 citest python setup.py install
 
+citest false
+
 echob "update gh pages..."
 citest pip install pyOpenSSL && ci/update-gh-pages.sh
-
-citest false
