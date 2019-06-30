@@ -2,6 +2,8 @@
 
 . ci/ci-functions.sh
 
+citest git branch -a
+citest git branch
 citest git checkout deployment
 citest git reset
 citest cat ci/deploy-whitelist | xargs git add
