@@ -3,6 +3,7 @@
 . ci/ci-functions.sh
 
 echob "generating message api..."
+citest echo hello
 citest pip install jinja2
 citest generate/generate-python.py --output-dir=brping
 

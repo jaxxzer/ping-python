@@ -3,8 +3,6 @@
 # Deploy repository documentation
 
 # Variables
-bold=$(tput bold)
-normal=$(tput sgr0)
 doc_path="doc"
 project_path=${doc_path}/..
 clone_folder=/tmp/update-repos

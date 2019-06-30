@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
+
+bold=$(tput bold)
+normal=$(tput sgr0)
+
 echob() {
-    echo "${bold}${1}${normal}"
+    echo "${bold}${@}${normal}"
 }
 
 citest() {
-    echob "testing $@"
-    "$@" || echob "failed" && exit 1
+    echob "$@"
+    $@ || exit 1
 }
