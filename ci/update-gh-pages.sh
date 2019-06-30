@@ -13,7 +13,7 @@ repository_name="ping-python"
 repository_githash=$(git -C ${project_path} rev-parse HEAD)
 
 # Functions
-. ci/functions.sh
+. ci/ci-functions.sh
 
 echob "Check git configuration."
 if [ "${TRAVIS}" = "true" ] || ! git config --list | grep -q "user.name"; then

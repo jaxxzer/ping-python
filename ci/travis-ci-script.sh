@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. ci/functions.sh
+. ci/ci-functions.sh
 
 echob "generating message api..."
 pip install jinja2 && generate/generate-python.py --output-dir=brping || exit 1
