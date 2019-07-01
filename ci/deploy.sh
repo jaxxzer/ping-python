@@ -2,6 +2,8 @@
 
 . ci/ci-functions.sh
 
+test git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
+test git fetch origin deployment
 test git branch -a
 test git branch
 test cat ci/deploy-whitelist
