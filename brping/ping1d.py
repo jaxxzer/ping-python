@@ -15,6 +15,7 @@ import time
 
 
 class Ping1D(object):
+    _hello = None
     _acked_id = None
     _ascii_message = None
     _confidence = None
