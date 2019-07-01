@@ -10,9 +10,9 @@ echob() {
 
 test() {
     echob "$@"
-    echo "travis_fold:start:$testN\\r"
+    echo "travis_fold:start:$testN"
     "$@"
-    echo "travis_fold:start:$testN\\r"
+    echo "travis_fold:start:$testN"
     testN=$(($testN+1))
     echo $testN
     exitcode=$?
