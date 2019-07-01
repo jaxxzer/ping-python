@@ -24,8 +24,8 @@ else
 fi
 
 echob "Build doxygen documentation."
-citest cd $doc_path
-citest doxygen "Doxyfile"
+test cd $doc_path
+test doxygen "Doxyfile"
 
 echo "- Check files"
 ls -A "${doc_path}/html/"

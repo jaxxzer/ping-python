@@ -7,7 +7,7 @@ echob() {
     echo "${bold}${@}${normal}"
 }
 
-citest() {
+test() {
     echob "$@"
     $@ || exit 1
 }
