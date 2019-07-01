@@ -9,7 +9,7 @@ echob() {
 
 test() {
     echob "$@"
-    "$@"
+    $@
     exitcode=$?
     echob "$@ exited with $exitcode"
     if [ $exitcode -ne 0 ]; then exit $exitcode; fi
