@@ -10,7 +10,7 @@ git commit -m temporary-commit
 test git checkout deployment
 test git checkout HEAD@{1} ci/deploy-whitelist
 cat ci/deploy-whitelist | xargs git checkout HEAD@{1}
-test git diff --staged
+test git --no-pager diff --staged
 test git commit -m "update auotgenerated files"
-test git log
-test git show
+test git --no-pager log
+test git --no-pager show
