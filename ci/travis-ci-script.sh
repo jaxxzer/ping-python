@@ -14,7 +14,7 @@ test python setup.py install
 
 echob "update gh pages..."
 test pip install pyOpenSSL
-test ci/update-gh-pages.sh
+test ci/deploy-gh-pages.sh
 
 echob "deploying..."
 test ci/deploy.sh
