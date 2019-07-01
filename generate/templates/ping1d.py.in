@@ -16,6 +16,7 @@ import time
 class Ping1D(object):
 {% for field in all_fields|sort %}
     _{{field}} = None
+    _{{field}}2 = None
 {% endfor%}
 
     def __init__(self, device_name, baudrate=115200):
