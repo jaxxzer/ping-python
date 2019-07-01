@@ -9,5 +9,8 @@ echob() {
 
 test() {
     echob "$@"
-    $@ || exit 1
+    "$@"
+    result=$?
+    echob "$@ exited with $result"
+    if [ $result -ne 0 ]; then exit $result; fi
 }
