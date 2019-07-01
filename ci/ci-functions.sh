@@ -13,8 +13,8 @@ test() {
     echo -en 'travis_fold:start:#${testN}\\r'
     "$@"
     echo -en 'travis_fold:start:#${testN}\\r'
-    testN=$((testN+1))
-    echo testN
+    testN=$(($testN+1))
+    echo $testN
     exitcode=$?
     echob "$@ exited with $exitcode"
     if [ $exitcode -ne 0 ]; then exit $exitcode; fi
