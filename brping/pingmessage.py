@@ -7,7 +7,7 @@ import struct
 from brping import definitions
 payload_dict = definitions.payload_dict_all
 asciiMsgs = [definitions.COMMON_NACK, definitions.COMMON_ASCII_TEXT]
-variable_msgs = [definitions.PING1D_PROFILE, definitions.PING360_DEVICE_DATA, ]
+variable_msgs = [definitions.PING1D_PROFILE, definitions.PING360_DEVICE_DATA, definitions.BEAMPLOT_RX_DATA]
 
 
 class PingMessage(object):
@@ -142,6 +142,8 @@ class PingMessage(object):
             else:
                 values.append(getattr(self, attr))
 
+
+        #print(attrs, values, msg_format)
         # Pack message contents into bytearray
         self.msg_data = bytearray(struct.pack(msg_format, *values))
 
@@ -196,7 +198,7 @@ class PingMessage(object):
         checksum = 0
         for byte in self.msg_data[0:PingMessage.headerLength + self.payload_length]:
             checksum += byte
-        return checksum
+        return checksum & 0xffff
 
     ## Update the object checksum value
     # @return the object checksum value
@@ -206,6 +208,8 @@ class PingMessage(object):
 
     ## Verify that the object checksum attribute is equal to the checksum calculated according to the internal bytearray self.msg_data
     def verify_checksum(self):
+        print(self.calculate_checksum(), self.checksum)
+
         return self.checksum == self.calculate_checksum()
 
     ## Update the payload_length attribute with the **current** payload length, including dynamic length fields (if present)
