@@ -28,7 +28,8 @@ g = Generator()
 
 definitions = [ "common",
                 "ping1d",
-                "ping360"]
+                "ping360",
+                "beamplot"]
 
 struct_token = {"u8": "B",
                 "u16": "H",
