@@ -106,6 +106,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     s = serial.Serial(args.device, args.baudrate, exclusive=True)
+    s.send_break()
+    s.write("U".encode("ascii"))
     proxy = PingProxy(s, args.port)
 
     while True:
