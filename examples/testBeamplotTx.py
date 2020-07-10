@@ -30,6 +30,12 @@ if bp.initialize() is False:
     print("Failed to initialize beamplot!")
     exit(1)
 
+bp.request(definitions.COMMON_DEVICE_INFORMATION)
+
+if bp._device_type != 21:
+    print("Device is not beamplot tx!")
+    exit(1)
+
 responseTimeout = 1
 
 m = pingmessage.PingMessage(definitions.BEAMPLOT_TAKE_SAMPLES)
