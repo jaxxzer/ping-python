@@ -208,7 +208,7 @@ class PingMessage(object):
 
     ## Verify that the object checksum attribute is equal to the checksum calculated according to the internal bytearray self.msg_data
     def verify_checksum(self):
-        print(self.calculate_checksum(), self.checksum)
+        #print(self.calculate_checksum(), self.checksum)
 
         return self.checksum == self.calculate_checksum()
 
