@@ -35,6 +35,10 @@ m = pingmessage.PingMessage(definitions.BEAMPLOT_TAKE_SAMPLES)
 m.nsamples = 100
 m.tx_frequency = 115000
 m.tx_periods = 10
+m.opamp1 = 1
+m.opamp2 = 1
+m.adc_sample_time = 4
+m.fs = 1000000
 m.pack_msg_data()
 bp.write(m.msg_data)
 

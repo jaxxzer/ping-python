@@ -32,7 +32,7 @@ if bptx.initialize() is False:
     exit(1)
 
 m = pingmessage.PingMessage(definitions.BEAMPLOT_TAKE_SAMPLES)
-m.nsamples = 500
+m.nsamples = 100
 m.tx_frequency = 115000
 m.tx_periods = 10
 m.opamp1 = 1
