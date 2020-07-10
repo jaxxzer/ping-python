@@ -8,7 +8,7 @@ from builtins import input
 
 ##Parse Command line options
 ############################
-
+parser = argparse.ArgumentParser(description="beamplot control")
 parser.add_argument('--tx', action="store", required=True, type=str, help="beamplot tx device port. E.g: /dev/ttyUSB0")
 parser.add_argument('--rx', action="store", required=True, type=str, help="beamplot rx device port. E.g: /dev/ttyUSB0")
 parser.add_argument('--baudrate', action="store", type=int, default=3000000, help="Ping device baudrate. E.g: 115200")
