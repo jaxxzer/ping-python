@@ -1,0 +1,5 @@
+{
+    "nsamples": 10000,
+    "tx_frequency": 115000,
+    "tx_periods": 10
+}

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-#simplePingExample.py
 from brping import PingDevice, definitions, pingmessage
 import time
 import argparse
@@ -31,9 +30,13 @@ if bp.initialize() is False:
     print("Failed to initialize beamplot!")
     exit(1)
 
+responseTimeout = 1
+
 m = pingmessage.PingMessage(definitions.BEAMPLOT_TAKE_SAMPLES)
-m.nsamples = 5000
+m.nsamples = 10000
+m.tx_frequency = 115000
+m.tx_periods = 10
 m.pack_msg_data()
 bp.write(m.msg_data)
 
-print(bp.wait_message([definitions.BEAMPLOT_RX_DATA], 1))
+print(bp.wait_message([definitions.BEAMPLOT_RX_DATA, definitions.COMMON_NACK], responseTimeout))
