@@ -88,6 +88,17 @@ class Ping1D(PingDevice):
 
 {% endfor %}
 
+{% for msg in messages["control"]|sort %}
+    def control_{{msg}}(self{% for field in messages["control"][msg].payload %}, {{field.name}}{% endfor %}):
+        m = pingmessage.PingMessage(definitions.PING1D_{{msg|upper}})
+{% for field in messages["control"][msg].payload %}
+        m.{{field.name}} = {{field.name}}
+{% endfor %}
+        m.pack_msg_data()
+        self.write(m.msg_data)
+
+{% endfor %}
+
 if __name__ == "__main__":
     import argparse
 
