@@ -92,6 +92,7 @@ class PingProxy(object):
             c = self.clients[client]
             msg = c.dequeue()
             while msg is not None:
+                print(">%d", msg.message_id)
                 self.device.write(msg.msg_data)
                 msg = c.dequeue()
 
