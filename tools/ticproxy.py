@@ -12,7 +12,9 @@ import errno
 
 
 class TicProxy(object):
-    def __init__(self, device=None, port=None):
+    def __init__(self, device=None, port=None, debug=False):
+        self.debug = debug
+
         ## A serial object for ping device comms
         self.device = device
 
@@ -40,6 +42,8 @@ class TicProxy(object):
     def run(self):
         try:
             data, self.client = self.socket.recvfrom(4096)
+            if (self.debug):
+                print(">", self.client, data.hex())
             self.device.write(data)
         except Exception as e:
             if e.errno == errno.EAGAIN:
@@ -47,15 +51,14 @@ class TicProxy(object):
             else:
                 print("Error reading data", e)
 
-        # read ping device
+        # read serial device
         device_data = self.device.read(self.device.in_waiting)
 
-        # send ping device data to all clients
+        # send serial data to client
         if device_data and self.client != None:  # don't write empty data
-            # print("writing to client", client)
+            if self.debug:
+                print("<", self.client, device_data.hex())
             self.socket.sendto(device_data, self.client)
-
-
 
 if __name__ == '__main__':
     import argparse
@@ -63,10 +66,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Ping udp proxy server.")
     parser.add_argument('--device', action="store", required=True, type=str, help="Ping device serial port.")
     parser.add_argument('--port', action="store", type=int, default=9090, help="Server udp port.")
+    parser.add_argument('--debug', action="store_true", help="enable debug output")
     args = parser.parse_args()
 
     s = serial.Serial(args.device, 9600, exclusive=True)
-    proxy = TicProxy(s, args.port)
+    proxy = TicProxy(s, args.port, args.debug)
 
     while True:
         proxy.run()
